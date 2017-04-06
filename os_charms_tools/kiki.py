@@ -158,6 +158,7 @@ def supported_juju_version():
                                      "command structure")
     return True
 
+
 # Assert this is a valid version of Juju immediately
 assert supported_juju_version()
 
