@@ -76,5 +76,6 @@ def cs_query(charm, series, uri=''):
                       "result:{}".format(charm, series, uri, result.status))
         return {}
 
+
 if __name__ == "__main__":
     pprint(cs_query('neutron-api', 'xenial', uri='charm-metadata'))
