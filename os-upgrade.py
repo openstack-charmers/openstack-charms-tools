@@ -249,6 +249,12 @@ SERVICES = [
 
     # Upgrade nova
     'nova-cloud-controller',
+
+    # note: if you have multiple hypervisors in your model you will use
+    # different names for nova-compute with different options, e.g.
+    # nova-compute-kvm
+    # nova-compute-lxd
+    # therefore, you will need to change the string below accordingly
     'nova-compute',
 
     # Neutron upgrades
@@ -406,6 +412,19 @@ def perform_bigbang_upgrade(service):
             time.sleep(5)
 
 
+def validate_services(env, services):
+    '''
+    Before starting an upgrade, validate that all of
+    the services to be upgraded are actually present in the model.
+    '''
+    for s in services:
+        log.info('Checking whether %s is present' % s)
+        if not env.get_service(s):
+            raise Exception('%s is not present in the model' % s)
+
+        log.info('Validated presence of all services to upgrade')
+
+
 def main():
     global args
     parser = argparse.ArgumentParser(
@@ -434,6 +453,8 @@ def main():
         to_upgrade = args.app
     else:
         to_upgrade = SERVICES
+
+    validate_services(env, to_upgrade)
 
     for service in to_upgrade:
         log.info('Upgrading %s', service)
